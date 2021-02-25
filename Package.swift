@@ -7,7 +7,10 @@ let package = Package(
     name: "xcodebuild-to-summarytable",
     platforms: [
             .macOS(.v10_15),
-        ],
+    ],
+    products: [
+        .executable(name: "xcodebuild-to-summarytable", targets: ["xcodebuild-to-summarytable"])
+    ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/apple/swift-argument-parser", from: "0.3.1"),
