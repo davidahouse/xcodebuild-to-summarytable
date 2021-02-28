@@ -11,6 +11,9 @@ struct XcodeBuildToSummaryTable: ParsableCommand {
     @Option(name: .shortAndLong, help: "Set to the output path to write the results to")
     var outputPath: String
     
+    @Option(name: .shortAndLong, help: "Provide a link for the entire summary table")
+    var link: String?
+    
     mutating func run() throws {
         let derivedData = DerivedData()
         derivedData.root = root
@@ -49,13 +52,13 @@ struct XcodeBuildToSummaryTable: ParsableCommand {
         if warnings > 0 {
             compileBadges.append(SummaryTableBadge(shield: "Compile%20Warnings-\(warnings)-yellow", alt: "\(warnings) Compile Warnings", logo: nil, style: nil))
         }
-        items.append(SummaryTableItem(title: "Compile Results", link: nil, valueString: nil, valueBadges: compileBadges))
+        items.append(SummaryTableItem(title: "Compile Results", link: link, valueString: nil, valueBadges: compileBadges))
         
         var testBadges = [SummaryTableBadge]()
         testBadges.append(SummaryTableBadge(shield: "Unit%20Test%20Count-\(testSummary.allTests)-informational", alt: "Unit Test Count-\(testSummary.allTests)", logo: nil, style: nil))
         testBadges.append(SummaryTableBadge(shield: "Unit%20Tests%20Successful-\(testSummary.successTests)-success", alt: "Unit Tests Successful-\(testSummary.successTests)", logo: nil, style: nil))
         testBadges.append(SummaryTableBadge(shield: "Unit%20Tests%20Failed-\(testSummary.failedTests)-critical", alt: "Unit Tests Failed-\(testSummary.failedTests)", logo: nil, style: nil))
-        items.append(SummaryTableItem(title: "Unit Testing", link: nil, valueString: nil, valueBadges: testBadges))
+        items.append(SummaryTableItem(title: "Unit Testing", link: link, valueString: nil, valueBadges: testBadges))
 
         var coverageBadges = [SummaryTableBadge]()
         if let coverage = testSummary.codeCoverage {
@@ -70,7 +73,7 @@ struct XcodeBuildToSummaryTable: ParsableCommand {
                 coverageBadges.append(SummaryTableBadge(shield: "Code%20Coverage-\(totalCoverage)%25-success", alt: "Code Coverage \(totalCoverage)% Great", logo: nil, style: nil))
             }
         }
-        items.append(SummaryTableItem(title: "Code Coverage", link: nil, valueString: nil, valueBadges: coverageBadges))
+        items.append(SummaryTableItem(title: "Code Coverage", link: link, valueString: nil, valueBadges: coverageBadges))
 
         do {
             let encoder = JSONEncoder()
